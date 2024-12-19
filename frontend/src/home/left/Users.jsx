@@ -3,10 +3,9 @@ import User from "./User";
 function Users() {
   return (
     <div
-      style={{ maxHeight: "calc(84vh - 1vh" }}
-      className="my-2 flex-aditi overflow-y-auto"
+      className="flex-aditi py-2 overflow-y-auto"
+      style={{ maxHeight: "calc(84vh-1vh)"}}
     >
-      <User></User>
       <User></User>
       <User></User>
       <User></User>
@@ -21,4 +20,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default Users

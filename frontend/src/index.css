@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.flex-aditi::-webkit-scrollbar{
-    display: none;
+.flex-aditi::-webkit-scrollbar {
+  display: none;
 }
-
-

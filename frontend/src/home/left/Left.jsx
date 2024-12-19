@@ -5,7 +5,7 @@ function Left() {
   return (
     <>
       <div className="border border-brightWhite w-[25%] bg-charcoal text-white">
-        <h1 className="font-robotoMono px-4 py-1 text-2xl text- font-bold">
+        <h1 className="font-robotoMono px-4 pt-1 text-2xl text- font-bold">
           CHATS
         </h1>
         <div>

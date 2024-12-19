@@ -10,7 +10,7 @@ function Search() {
             <label className="border-[1px] bg-brightWhite rounded-lg flex items-center gap-2 w-[80%] p-3">
               <input
                 type="text"
-                className="grow outline-none bg-brightWhite text-coolGray font-sourceSans"
+                className="grow outline-none bg-brightWhite text-coolGray font-sourceSans w-[80%]"
                 placeholder="Search"
               />
             </label>
