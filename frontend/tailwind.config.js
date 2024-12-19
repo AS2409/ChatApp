@@ -18,12 +18,18 @@ export default {
         neoMint: '#B8F2E6',
         mediumGray: '#666666',
 
-        // Cyberpunk Glow
+        // Cyberpunk Glow..........We are using this set for now
         cyberNavy: '#0D1117',
         brightWhite: '#F2F2F2',
         neonCyan: '#00FFFF',
         neonMagenta: '#FF00FF',
         lavenderBlue: '#9BA9FF',
+        electricLime: '#39FF14',
+        glowingYellow: '#FFD700',
+        cyberPink: '#FF007F',
+        deepPurple: '#4B0082',
+        darkTeal: '#014F43',
+
 
         // Earthy Tones
         creamWhite: '#FDFCFB',
