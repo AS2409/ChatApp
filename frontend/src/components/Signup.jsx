@@ -98,12 +98,12 @@ function Signup() {
             <input
               type="submit"
               value="Sign Up"
-              className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-cyberPink transition duration-300 ease-in-out hover:scale-105"
+              className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-neonCyan transition duration-300 ease-in-out hover:scale-105"
             />
 
-            <p className="text-lavenderBlue font-roboto pt-1">
+            <p className="text-neonMagenta font-roboto pt-1">
               Already have an account?{" "}
-              <span className="text-neonMagenta underline cursor-pointer">
+              <span className="text-lavenderBlue underline cursor-pointer">
                 Login
               </span>
             </p>
