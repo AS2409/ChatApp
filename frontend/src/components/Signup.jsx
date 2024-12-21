@@ -1,11 +1,53 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 function Signup() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const password = watch("password", "");
+  const confirmPassword = watch(" confirmPassword", "");
+  const validatePasswordMatch =(value)=>{
+    return value === password || "*Password and Confirm Password don't match";
+  };
+
+  const onSubmit = (data) => {
+    const userInfo = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+    };
+    console.log(userInfo);
+    axios.post("http://localhost:5002/user/signup", userInfo)
+    .then((response) =>{
+        console.log(response.data);
+        if(response.data){
+            alert("Signup successfull!! You can Login now.");
+        }
+
+        localStorage.setItem("messenger", JSON.stringify(response.data));
+    })
+    .catch((error)=>{
+        // console.error(error);
+        if(error.response){
+            alert("Error: "+ error.response.data.message);
+        }
+    })
+  }
+
+
+
   return (
     <>
       <div className="flex h-screen items-center justify-center bg-cyberNavy">
         <form
-          action=" "
+          onSubmit={handleSubmit(onSubmit)}
           className="border border-neonMagenta px-6 py-5 rounded-md space-y-4 w-96 shadow-lg shadow-neonCyan"
         >
           <h1 className="text-neonMagenta  text-center font-bold font-montserrat text-3xl neon-font">
@@ -13,8 +55,30 @@ function Signup() {
           </h1>
           <h2 className="text-center text-xl font-roboto text-cyberPink">
             Create a New{" "}
-            <span className="text-cyberPink font-semibold">Account!!</span>
+            <span className="text-cyberPink font-semibold">Account!</span>
           </h2>
+
+
+          {/* Username */}
+          <label className="input input-bordered flex items-center font-raleway gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 text-cyberNavy opacity-70"
+            >
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+              placeholder="Username"
+              {...register("name", { required: true })}
+            />   
+          </label>
+          {errors.name && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
+
+
 
           {/* Email */}
           <label className="input input-bordered flex items-center font-raleway gap-2">
@@ -31,25 +95,12 @@ function Signup() {
               type="text"
               className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
               placeholder="Email"
+              {...register("email", { required: true })}
             />
           </label>
+          {errors.email && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
 
-          {/* Username */}
-          <label className="input input-bordered flex items-center font-raleway gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 text-cyberNavy opacity-70"
-            >
-              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
-              placeholder="Username"
-            />
-          </label>
+
 
           {/* Password */}
           <label className="input input-bordered flex items-center font-raleway  gap-2">
@@ -69,8 +120,12 @@ function Signup() {
               type="password"
               className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
               placeholder="Password"
+              {...register("password", { required: true })}
             />
           </label>
+          {errors.password && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
+
+
 
           {/* Confirm Password */}
           <label className="input input-bordered flex items-center font-raleway gap-2">
@@ -90,8 +145,12 @@ function Signup() {
               type="password"
               className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
               placeholder="Confirm Password"
+              {...register("confirmPassword", { required: true, validate: validatePasswordMatch,})}
             />
           </label>
+          {errors.confirmPassword && <span className= "text-red-600 text-sm font-semibold">{errors.confirmPassword.message}</span>}
+
+
 
           {/*Text and Button*/}
           <div className="text-center space-y-2">
@@ -100,7 +159,7 @@ function Signup() {
               value="Sign Up"
               className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-neonCyan transition duration-300 ease-in-out hover:scale-105"
             />
-
+            {errors.exampleRequired && <span>This field is required</span>}
             <p className="text-neonMagenta font-roboto pt-1">
               Already have an account?{" "}
               <span className="text-lavenderBlue underline cursor-pointer">
