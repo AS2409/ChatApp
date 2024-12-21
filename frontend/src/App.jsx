@@ -11,8 +11,8 @@ function App() {
     //   <Left></Left>
     //   <Right></Right>
     // </div>
-    // <Signup></Signup>
-    <Login></Login>
+    <Signup></Signup>
+    // <Login></Login>
   );
 }
 
