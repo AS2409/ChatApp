@@ -4,8 +4,8 @@ import createTokenAndSaveCookie from "../jwt/generateToken.js"
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, confirmpassword } = req.body;
-    if (password != confirmpassword) {
+    const { name, email, password, confirmPassword } = req.body;
+    if (password != confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
     const user = await User.findOne({ email });
@@ -22,7 +22,7 @@ export const signup = async (req, res) => {
     await newUser.save();
     if (newUser) {
       createTokenAndSaveCookie(newUser._id, res);
-      res.status(201).json({ message: "User registered successfully" ,       user:{
+      res.status(201).json({ message: "User registered successfully" , user:{
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
@@ -40,7 +40,14 @@ export const login = async (req,res)=>{
   const {email, password} = req.body;
   try{
     const user = await User.findOne({email})     //User is like database here
+    if (!user) {
+      return res.status(404).json({ message: "Invalid User or Password" });
+    }
+
     const isMatch =await bcrypt.compare(password, user.password);
+
+
+
     if(!user || !isMatch){
       return res.status(404).json({message: "Invalid User or Password"})
     }

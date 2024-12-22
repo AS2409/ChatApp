@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
 
 function Signup() {
+  const {authUser, setAuthUser} = useAuth();
   const {
     register,
     handleSubmit,
@@ -11,12 +13,12 @@ function Signup() {
   } = useForm();
 
   const password = watch("password", "");
-  const confirmPassword = watch(" confirmPassword", "");
+  const confirmPassword = watch("confirmPassword", "");
   const validatePasswordMatch =(value)=>{
     return value === password || "*Password and Confirm Password don't match";
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     const userInfo = {
         name: data.name,
         email: data.email,
@@ -24,17 +26,19 @@ function Signup() {
         confirmPassword: data.confirmPassword,
     };
     console.log(userInfo);
-    axios.post("http://localhost:5002/user/signup", userInfo)
+
+    await axios
+    .post("http://localhost:5002/user/signup", userInfo)
     .then((response) =>{
         console.log(response.data);
         if(response.data){
             alert("Signup successfull!! You can Login now.");
         }
-
+        //User's data is stored here:
         localStorage.setItem("messenger", JSON.stringify(response.data));
+        setAuthUser(response.data); //globally data use now.
     })
     .catch((error)=>{
-        // console.error(error);
         if(error.response){
             alert("Error: "+ error.response.data.message);
         }
@@ -160,7 +164,7 @@ function Signup() {
               className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-neonCyan transition duration-300 ease-in-out hover:scale-105"
             />
             {errors.exampleRequired && <span>This field is required</span>}
-            <p className="text-neonMagenta font-roboto pt-1">
+            <p className="text-cyberPink font-roboto pt-1">
               Already have an account?{" "}
               <span className="text-lavenderBlue underline cursor-pointer">
                 Login

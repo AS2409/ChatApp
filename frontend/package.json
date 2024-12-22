@@ -27,6 +27,7 @@
     "@fontsource/roboto-mono": "^5.1.0",
     "@fontsource/source-sans-pro": "^5.1.0",
     "axios": "^1.7.9",
+    "js-cookie": "^3.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",

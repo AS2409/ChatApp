@@ -21,5 +21,5 @@ try {
 app.use("/user", userRouter);
 
 app.listen(PORT, () => {
-  console.log(`Exapmle app listening on port ${PORT}`);
+  console.log(`Example app listening on port ${PORT}`);
 });

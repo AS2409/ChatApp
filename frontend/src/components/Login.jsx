@@ -1,8 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Login() {
+  const {authUser, setAuthUser} = useAuth();
 
 
   const {
@@ -24,10 +26,11 @@ export default function Login() {
         .then((response) =>{
             console.log(response.data);
             if(response.data){
-                alert(":ogin successfull!!");
+                alert("Login successful!");
             }
     
             localStorage.setItem("messenger", JSON.stringify(response.data));
+            setAuthUser(response.data); //globally data use now.
         })
         .catch((error)=>{
             // console.error(error);
