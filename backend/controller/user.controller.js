@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import createTokenAndSaveCookie from "../jwt/generateToken.js"
+import createTokenAndSaveCookie from "../jwt/generateToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
@@ -22,11 +23,14 @@ export const signup = async (req, res) => {
     await newUser.save();
     if (newUser) {
       createTokenAndSaveCookie(newUser._id, res);
-      res.status(201).json({ message: "User registered successfully" , user:{
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-      },});
+      res.status(201).json({
+        message: "User registered successfully",
+        user: {
+          _id: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+        },
+      });
     }
   } catch (error) {
     console.log(error);
@@ -34,27 +38,23 @@ export const signup = async (req, res) => {
   }
 };
 
-
-
-export const login = async (req,res)=>{
-  const {email, password} = req.body;
-  try{
-    const user = await User.findOne({email})     //User is like database here
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email }); //User is like database here
     if (!user) {
       return res.status(404).json({ message: "Invalid User or Password" });
     }
 
-    const isMatch =await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-
-
-    if(!user || !isMatch){
-      return res.status(404).json({message: "Invalid User or Password"})
+    if (!user || !isMatch) {
+      return res.status(404).json({ message: "Invalid User or Password" });
     }
     createTokenAndSaveCookie(user._id, res);
     res.status(201).json({
       message: "User logged in successfully",
-      user:{
+      user: {
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -64,5 +64,26 @@ export const login = async (req,res)=>{
     console.log(error);
     res.status(500).json({ message: "Server Error" });
   }
+};
 
+export const getUserProfile = async (req, res) => {
+  try {
+    //from line 72 to 80 I have modified for the error "cannot read properties of undefinde (reading 'id').
+    const token = req.cookies.jwt; //cookies.jwt => will get jwt token
+    if (!token) {
+      return res.status(401).json({ message: "not authorized" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN);
+    if (!decoded) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    const loggedInUser = await User.findById(decoded.userId);
+    const filteredUsers = await User.find({
+      _id: { $ne: loggedInUser },
+    }).select("-password"); //select("-password")=> use to eliminate password field when we see user data
+    res.status(201).json({ filteredUsers });
+  } catch (error) {
+    console.log("Error in allUsers Controller " + error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
