@@ -2,44 +2,45 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
 export default function Login() {
-  const {authUser, setAuthUser} = useAuth();
-
+  const { authUser, setAuthUser } = useAuth();
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();    
+  } = useForm();
 
+  const onSubmit = (data) => {
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    console.log(userInfo);
+    axios
+      .post("http://localhost:5002/user/login", userInfo)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data) {
+          alert("Login successful!");
+        }
 
-    const onSubmit = (data) => {
-        const userInfo = {
-            // name: data.name,
-            email: data.email,
-            password: data.password,
-        };
-        console.log(userInfo);
-        axios.post("http://localhost:5002/user/login", userInfo)
-        .then((response) =>{
-            console.log(response.data);
-            if(response.data){
-                alert("Login successful!");
-            }
-    
-            localStorage.setItem("messenger", JSON.stringify(response.data));
-            setAuthUser(response.data); //globally data use now.
-        })
-        .catch((error)=>{
-            // console.error(error);
-            if(error.response){
-                alert("Error: "+ error.response.data.message);
-            }
-        })
-      }
+        localStorage.setItem("messenger", JSON.stringify(response.data));
+        setAuthUser(response.data); // Set global auth data
 
+        // Redirect to another page (use a relative path or full URL)
+        navigate("/"); // Redirect to the desired page after login
+      })
+      .catch((error) => {
+        if (error.response) {
+          alert("Error: " + error.response.data.message);
+        }
+      });
+  };
 
   return (
     <>
@@ -49,7 +50,7 @@ export default function Login() {
             onSubmit={handleSubmit(onSubmit)}
             className="border border-neonMagenta px-6 py-5 rounded-md space-y-4 w-96 shadow-lg shadow-neonCyan"
           >
-            <h1 className="text-neonMagenta  text-center font-bold font-montserrat text-3xl neon-font">
+            <h1 className="text-neonMagenta text-center font-bold font-montserrat text-3xl neon-font">
               Cy<span className="text-neonCyan">Chat</span>
             </h1>
             <h2 className="text-center text-xl font-roboto text-cyberPink">
@@ -75,13 +76,14 @@ export default function Login() {
                 {...register("email", { required: true })}
               />
             </label>
-            {errors.email && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
-  
-  
-
+            {errors.email && (
+              <span className="text-red-600 text-sm font-semibold">
+                *This field is required
+              </span>
+            )}
 
             {/* Password */}
-            <label className="input input-bordered flex items-center font-raleway  gap-2">
+            <label className="input input-bordered flex items-center font-raleway gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -99,12 +101,13 @@ export default function Login() {
                 className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
                 placeholder="Password"
                 {...register("password", { required: true })}
-                />
-              </label>
-              {errors.password && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
-    
-
-
+              />
+            </label>
+            {errors.password && (
+              <span className="text-red-600 text-sm font-semibold">
+                *This field is required
+              </span>
+            )}
 
             {/*Text and Button*/}
             <div className="text-center space-y-2">
@@ -116,9 +119,12 @@ export default function Login() {
 
               <p className="text-neonMagenta font-roboto pt-1">
                 Don't have an account?{" "}
-                <span className="text-lavenderBlue underline cursor-pointer">
+                <Link
+                  to={"/signup"}
+                  className="text-lavenderBlue underline cursor-pointer"
+                >
                   Signup
-                </span>
+                </Link>
               </p>
             </div>
           </form>

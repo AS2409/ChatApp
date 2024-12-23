@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
 
 function Signup() {
-  const {authUser, setAuthUser} = useAuth();
+  const { authUser, setAuthUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -14,38 +15,36 @@ function Signup() {
 
   const password = watch("password", "");
   const confirmPassword = watch("confirmPassword", "");
-  const validatePasswordMatch =(value)=>{
+  const validatePasswordMatch = (value) => {
     return value === password || "*Password and Confirm Password don't match";
   };
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     const userInfo = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
     };
     console.log(userInfo);
 
     await axios
-    .post("http://localhost:5002/user/signup", userInfo)
-    .then((response) =>{
+      .post("http://localhost:5002/user/signup", userInfo)
+      .then((response) => {
         console.log(response.data);
-        if(response.data){
-            alert("Signup successfull!! You can Login now.");
+        if (response.data) {
+          alert("Signup successfull!! You can Login now.");
         }
         //User's data is stored here:
         localStorage.setItem("messenger", JSON.stringify(response.data));
         setAuthUser(response.data); //globally data use now.
-    })
-    .catch((error)=>{
-        if(error.response){
-            alert("Error: "+ error.response.data.message);
+      })
+      .catch((error) => {
+        if (error.response) {
+          alert("Error: " + error.response.data.message);
         }
-    })
-  }
-
-
+      });
+  };
 
   return (
     <>
@@ -62,7 +61,6 @@ function Signup() {
             <span className="text-cyberPink font-semibold">Account!</span>
           </h2>
 
-
           {/* Username */}
           <label className="input input-bordered flex items-center font-raleway gap-2">
             <svg
@@ -78,11 +76,13 @@ function Signup() {
               className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
               placeholder="Username"
               {...register("name", { required: true })}
-            />   
+            />
           </label>
-          {errors.name && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
-
-
+          {errors.name && (
+            <span className="text-red-600 text-sm font-semibold">
+              *This field is required
+            </span>
+          )}
 
           {/* Email */}
           <label className="input input-bordered flex items-center font-raleway gap-2">
@@ -102,9 +102,11 @@ function Signup() {
               {...register("email", { required: true })}
             />
           </label>
-          {errors.email && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
-
-
+          {errors.email && (
+            <span className="text-red-600 text-sm font-semibold">
+              *This field is required
+            </span>
+          )}
 
           {/* Password */}
           <label className="input input-bordered flex items-center font-raleway  gap-2">
@@ -127,9 +129,11 @@ function Signup() {
               {...register("password", { required: true })}
             />
           </label>
-          {errors.password && <span className= "text-red-600 text-sm font-semibold">*This field is required</span>}
-
-
+          {errors.password && (
+            <span className="text-red-600 text-sm font-semibold">
+              *This field is required
+            </span>
+          )}
 
           {/* Confirm Password */}
           <label className="input input-bordered flex items-center font-raleway gap-2">
@@ -149,12 +153,17 @@ function Signup() {
               type="password"
               className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
               placeholder="Confirm Password"
-              {...register("confirmPassword", { required: true, validate: validatePasswordMatch,})}
+              {...register("confirmPassword", {
+                required: true,
+                validate: validatePasswordMatch,
+              })}
             />
           </label>
-          {errors.confirmPassword && <span className= "text-red-600 text-sm font-semibold">{errors.confirmPassword.message}</span>}
-
-
+          {errors.confirmPassword && (
+            <span className="text-red-600 text-sm font-semibold">
+              {errors.confirmPassword.message}
+            </span>
+          )}
 
           {/*Text and Button*/}
           <div className="text-center space-y-2">
@@ -166,9 +175,12 @@ function Signup() {
             {errors.exampleRequired && <span>This field is required</span>}
             <p className="text-cyberPink font-roboto pt-1">
               Already have an account?{" "}
-              <span className="text-lavenderBlue underline cursor-pointer">
+              <Link
+                to={"/login"}
+                className="text-lavenderBlue underline cursor-pointer"
+              >
                 Login
-              </span>
+              </Link>
             </p>
           </div>
         </form>
