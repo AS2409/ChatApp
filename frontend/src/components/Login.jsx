@@ -22,7 +22,7 @@ export default function Login() {
     };
     console.log(userInfo);
     axios
-      .post("http://localhost:5002/user/login", userInfo)
+      .post("/api/user/login", userInfo)
       .then((response) => {
         console.log(response.data);
         if (response.data) {
