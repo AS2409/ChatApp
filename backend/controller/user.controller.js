@@ -66,6 +66,18 @@ export const login = async (req, res) => {
   }
 };
 
+export const logout = async (req,res) =>{
+  try{
+    res.clearCookie("jwt");
+    res.status(200).json({message: "User logged out Successfully"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message: "Server Error"});
+  }
+
+};
+
+
 export const getUserProfile = async (req, res) => {
   try {
     //from line 72 to 80 I have modified for the error "cannot read properties of undefinde (reading 'id').

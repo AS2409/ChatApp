@@ -11,6 +11,9 @@ function userGetAllUsers() {
       setLoading(true); // Show loading while fetching data
       try {
         const token = Cookies.get('jwt');
+        if (!token) {
+          console.log("No JWT token found in cookies");
+        }
         const response = await axios.get('/api/user/getUserProfile', {
           withCredentials: true, // Ensures credentials like cookies are sent with the request
           headers: {
