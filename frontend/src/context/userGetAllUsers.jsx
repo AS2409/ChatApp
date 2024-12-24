@@ -3,28 +3,38 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 function userGetAllUsers() {
-  const [allUsers, setAllUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]); // Ensuring allUsers is initialized as an empty array
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
-      setLoading(true);
+      setLoading(true); // Show loading while fetching data
       try {
         const token = Cookies.get('jwt');
         const response = await axios.get('/api/user/getUserProfile', {
+          withCredentials: true, // Ensures credentials like cookies are sent with the request
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // Fix for the `Credentials` issue (explained below)
         });
-        setAllUsers(response.data);
-        setLoading(false) ;// Assuming the data is returned in `response.data`
+
+
+        if (response.data && Array.isArray(response.data.filteredUsers)) {
+          // Extracting the array from the `filteredUsers` key
+          setAllUsers(response.data.filteredUsers);
+        } else {
+          console.warn('Unexpected response format:', response.data);
+          setAllUsers([]); // Set to an empty array if the format is unexpected
+        }
       } catch (error) {
-        console.log('Error in userGetAllUsers: ' + error);
+        console.log('Error in userGetAllUsers:', error);
+        setAllUsers([]); // Ensure allUsers is an empty array in case of error
+      } finally {
+        setLoading(false); // Hide loading spinner once done
       }
     };
 
-    getUsers(); 
+    getUsers();
   }, []);
 
   return [allUsers, loading];
