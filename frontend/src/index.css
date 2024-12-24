@@ -5,3 +5,34 @@
 .flex-aditi::-webkit-scrollbar {
   display: none;
 }
+
+
+/* Main container for users list */
+.users-container {
+  max-height: calc(84vh - 1vh); /* Limit height based on viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 0.5rem; /* Add some padding */
+  scrollbar-width:thin; /* For modern browsers, thin scrollbar */
+  scrollbar-color: #5d5a5a #2e2c2c; /* Customize scrollbar colors */
+  border: 1px solid #ddd; /* Optional: Add a border for visual separation */
+  border-radius: 4px; /* Optional: Rounded corners */
+}
+
+/* Customize scrollbar for WebKit browsers */
+.users-container::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+.users-container::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded scrollbar thumb */
+}
+
+.users-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color when hovered */
+}
+
+.users-container::-webkit-scrollbar-track {
+  background: #f5f5f5; /* Background of the scrollbar track */
+}
+
