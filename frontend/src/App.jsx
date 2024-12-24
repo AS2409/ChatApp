@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
+        { <Route
           path="/"
           element={
             authUser ? (
@@ -26,7 +26,7 @@ function App() {
               <Navigate to={"/login"} />
             )
           }
-        />
+        /> }
         <Route
           path="/login"
           element={authUser ? <Navigate to={"/"} /> : <Login />}
