@@ -1,0 +1,62 @@
+import Conversation from "../models/conversation.models.js";
+import Message from "../models/message.model.js";
+
+export const sendMessage = async (req, res) => {
+  try {
+    const { message } = req.body;
+    const { id: receiverId } = req.params;
+    const senderId = req.user._id;
+
+    // Check if the message is not empty
+    if (!message || message.trim() === "") {
+      return res.status(400).json({ message: "Message cannot be empty" });
+    }
+
+    let conversation = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    if (!conversation) {
+      // Create a new conversation if none exists
+      conversation = await Conversation.create({
+        participants: [senderId, receiverId],
+      });
+    }
+
+    // Create a new message
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      message,
+    });
+
+    // Save both the message and the updated conversation
+    await newMessage.save();
+    conversation.messages.push(newMessage._id);
+    await conversation.save();
+
+    // Return a success response
+    res.status(201).json({ message: "Message sent successfully", newMessage });
+  } catch (err) {
+    console.log("Error in sending message " + err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getMessage = async (req, res) => {
+  try {
+    const { id: chatuser } = req.params;
+    const senderId = req.user._id;
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, chatuser] },
+    }).populate("messages"); //to see actual content or actual message
+    if (!conversation) {
+      return res.status(201).json([]);
+    }
+    const messages = conversation.messages;
+    res.status(201).json({ messages });
+  } catch (err) {
+    console.log("Message getting error " + err);
+    res.status(500).json({ err: "Internal server error" });
+  }
+};

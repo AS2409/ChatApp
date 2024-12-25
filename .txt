@@ -1,0 +1,12 @@
+....Message Model
+senderID = Ankit id
+receiverID = Raj id
+Message = "hello"
+
+Ankit(sender) --> hello
+Raj(receiver) -> "hi"
+
+senderID = Raj id
+receiverID = Ankit id
+Message = "hi"
+
