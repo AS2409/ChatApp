@@ -18,7 +18,7 @@ function useGetMessage() {
                     const res = await axios.get(
                         //we are now trying to obtain the id of selected user for sending/receiving messages:
                         
-                        `/api/message/get/${selectedConversation._id}/messages`
+                        `/api/message/get/${selectedConversation._id}`
                     );
                     setMessages(res.data);
                     setLoading(false);
