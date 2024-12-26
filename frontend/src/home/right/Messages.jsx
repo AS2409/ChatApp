@@ -1,19 +1,29 @@
 import React from "react";
 import Message from "./Message";
+import useGetMessage from "../../context/useGetMessage.js";
+import Loading from "../../components/Loading.jsx";
 
 function Messages() {
-  return (
-    <div className="users-container" style={{maxHeight: "calc(92vh-8vh)"}}>
-    <Message></Message>
-    <Message></Message>
-    <Message></Message>
-    <Message></Message>
-    <Message></Message>
-    <Message></Message>
-    
-    
+  const { messages, loading } = useGetMessage();
+  console.log(messages);
 
-    </div>
+  return (
+    <>
+      {loading?(<Loading></Loading>):(messages.length>0 && messages.map((message)=>{
+        <Message key = {message._id} message ={message} />
+      }))}
+
+
+      <div className="users-container" style={{ maxHeight: "calc(92vh-8vh)" }}>
+        {!loading && messages.length === 0 && (
+          <div>
+            <p className="text-center font-bold font-robotoMono text-neonMagenta mt-[20%] ">
+              Say Hii!!
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
