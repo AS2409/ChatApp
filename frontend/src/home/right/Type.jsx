@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoSend } from "react-icons/io5";
+import useSendMessage from "../../context/useSendMessage.js";
+// import axios from "axios";
 
 function Type() {
+const { loading,  sendMessages} = useSendMessage();
+const [message, setMessage] = useState("");
+const handleSubmit = async(e) => {
+  e.preventDefault();
+  if(message.trim()){
+    await sendMessages(message);
+    setMessage("");
+  }
+}
+
+
   return (
     <>
+    <form onSubmit={handleSubmit}>
       <div
         className="flex items-center w-full pl-4 pt-2 pb-2 bg-black sticky bottom-0 z-10"
         style={{
@@ -14,9 +28,15 @@ function Type() {
         }}
       >
        
+        
+
         <div className=" flex items-center w-full pr-3 h-[5vh]">
           <input
             type="text"
+            value={message}
+            onChange={(e)=>{
+              setMessage(e.target.value);
+            }}  
             className="grow outline-none rounded-lg bg-brightWhite text-coolGray font-sourceSans  h-[5vh]  pl-2 pr-5"
             placeholder="Type your message..."
           />
@@ -24,7 +44,10 @@ function Type() {
             <IoSend />
           </button>
         </div>
+
+        
       </div>
+      </form>
     </>
   );
 }

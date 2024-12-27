@@ -9,6 +9,8 @@ const userGetAllUser = () => {
       setLoading(true);
       try {
         const token = Cookies.get("jwt");
+        console.log('API response data:', res.data);
+
         const response = await axios.get(
           "http://localhost:5002/user/getUserProfile",
           {
