@@ -14,7 +14,8 @@ function useSendMessage() {
         const res = await axios.post(
           //we are now trying to obtain the id of selected user for sending/receiving messages:
 
-          `/api/message/send/${selectedConversation._id}`,{message}
+          `/api/message/send/${selectedConversation._id}`,
+          { message }
         );
         setMessages([...messages, res.data]); // We have to retain the previous message too!!
         setLoading(false);
@@ -24,9 +25,9 @@ function useSendMessage() {
       }
     }
   };
-//   sendMessages();
-//Calling sendMessages() immediately within the hook or on every render causes this infinite loop.
-//So we will conditionally call it, for instance, on button click or form submit.
+  //   sendMessages();
+  //Calling sendMessages() immediately within the hook or on every render causes this infinite loop.
+  //So we will conditionally call it, for instance, on button click or form submit.
 
   return {
     loading,
