@@ -8,17 +8,11 @@ function Messages() {
 
   // Handle loading state
   if (loading) {
-    return <Loading />; // Show loading spinner while messages are being fetched
+    return <Loading />;
   }
+  
 
-  // Handle error state
-  if (error) {
-    return (
-      <div className="error-message">
-        <p>{error}</p> {/* Show error message if fetching messages fails */}
-      </div>
-    );
-  }
+
 
   // Ensure messages is an array before using map
   if (!Array.isArray(messages)) {
@@ -32,8 +26,17 @@ function Messages() {
   // Handle no messages
   if (messages.length === 0) {
     return (
-      <div className="no-messages">
-        <p>No messages yet. Start the conversation!</p>
+      <div className="no-messages flex h-screen items-center justify-center text-center font-semibold text-xl">
+        <p>No messages yet. Let's start the conversation now <span></span> Start </p>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="error-message  flex h-screen items-center justify-center text-center font-semibold text-xl">
+        <p>{error}</p> {/* Show error message if fetching messages fails */}
       </div>
     );
   }

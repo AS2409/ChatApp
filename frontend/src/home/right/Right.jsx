@@ -18,7 +18,7 @@ import {useAuth} from "../../context/AuthProvider.jsx";
           <Chatuser /> {/* Chat user component */}
           <div
             className="pt-1 flex-aditi overflow-y-auto"
-            style={{ maxHeight: "calc(92vh - 8vh)" }}
+            style={{ maxHeight: "calc(92vh - 12vh)" }}
           >
             <Messages /> {/* Messages component */}
           </div>

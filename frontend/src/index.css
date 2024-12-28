@@ -13,8 +13,8 @@
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 0.5rem; /* Add some padding */
   scrollbar-width:thin; /* For modern browsers, thin scrollbar */
-  scrollbar-color: #5d5a5a #2e2c2c; /* Customize scrollbar colors */
-  border: 1px solid #ddd; /* Optional: Add a border for visual separation */
+  scrollbar-color: #0D1117  ##FF00FF;  
+  border: 1px solid #9BA9FF; /* Optional: Add a border for visual separation */
   border-radius: 4px; /* Optional: Rounded corners */
 }
 
