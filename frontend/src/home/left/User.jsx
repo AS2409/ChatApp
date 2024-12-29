@@ -9,8 +9,8 @@ function User({ user }) {
     <div
       className={`${
         isSelected
-          ? " border-cyberPink border-2 shadow-md shadow-neonCyan"
-          : "hover:bg-cyberNavy hover:shadow-md hover:shadow-neonCyan"
+          ? " bg-cyberNight shadow-md shadow-neonCyan"
+          : " hover:bg-cyberNight " 
       } transition duration-300 cursor-pointer rounded-lg mb-2`}
       onClick={() => setSelectedConversation(user)}
     >

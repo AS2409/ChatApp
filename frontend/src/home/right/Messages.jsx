@@ -14,11 +14,10 @@ function Messages() {
 
 
 
-  // Ensure messages is an array before using map
   if (!Array.isArray(messages)) {
     return (
       <div className="error-message">
-        <p>Invalid message data received.</p>
+        <p>Invalid message data received. Try Refeshing the page or Login again</p>
       </div>
     );
   }
@@ -35,7 +34,7 @@ function Messages() {
   // Handle error state
   if (error) {
     return (
-      <div className="error-message  flex h-screen items-center justify-center text-center font-semibold text-xl">
+      <div className="error-message flex h-screen items-center justify-center text-center font-semibold text-xl">
         <p>{error}</p> {/* Show error message if fetching messages fails */}
       </div>
     );

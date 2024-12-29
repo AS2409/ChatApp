@@ -13,7 +13,7 @@
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 0.5rem; /* Add some padding */
   scrollbar-width:thin; /* For modern browsers, thin scrollbar */
-  scrollbar-color: #0D1117  ##FF00FF;  
+  scrollbar-color: #0D1117 ;  
   border: 1px solid #9BA9FF; /* Optional: Add a border for visual separation */
   border-radius: 4px; /* Optional: Rounded corners */
 }
@@ -35,4 +35,6 @@
 .users-container::-webkit-scrollbar-track {
   background: #f5f5f5; /* Background of the scrollbar track */
 }
+
+
 
