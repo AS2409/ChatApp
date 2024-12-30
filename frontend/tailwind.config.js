@@ -1,4 +1,4 @@
-// /** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -6,19 +6,14 @@ export default {
   ],
   theme: {
     extend: {
-      colors:{
-        // Minimalist Dark Mode
-        darkSlate: '#1E1E2C',
-        softWhite: '#E0E0E0',
-        mutedGrayBlue: '#A1A1B1',
-
-        // Neo Mint and Monochrome
+      colors: {
+        // Existing Neo Mint and Monochrome
         nearWhite: '#F6F6F6',
         deepGray: '#333333',
         neoMint: '#B8F2E6',
         mediumGray: '#666666',
 
-        // Cyberpunk Glow..........We are using this set for now
+        // Cyberpunk Glow (Primary Set)
         cyberNavy: '#0D1117',
         brightWhite: '#F2F2F2',
         neonCyan: '#00FFFF',
@@ -30,44 +25,21 @@ export default {
         deepPurple: '#4B0082',
         darkTeal: '#014F43',
 
+        // Cyberpunk New Additions (Vibrant Glows)
+        cyberNight: '#1a1a2e',
+        neonAzure: '#3d5afe',
+        hotOrange: '#ff5722',
+        radiantPink: '#ff006e',
+        aquaCyan: '#00f5d4',
+        amberGlow: '#ff8800',
+        coralNeon: '#ff6f61',
+        neonViolet: '#6a0572',
 
-        // Earthy Tones
-        creamWhite: '#FDFCFB',
-        charcoal: '#2A2B2A',
-        sageGreen: '#A3BE8C',
-        clayOrange: '#D08770',
-        coolGray: '#6A6B6A',
-
-        // Modern Gradient Vibes
+        // Other Gradient-Friendly Colors
         purpleIndigo: '#8E2DE2',
         deepIndigo: '#4A00E0',
         coralOrange: '#FF6F61',
 
-        // Pastel Dreams
-        softPeach: '#FFF1F0',
-        mutedCharcoal: '#4B5563',
-        lightBlue: '#93C5FD',
-
-
-        // Oceanic Calm
-        paleAqua: '#E0F7FA',
-        oceanBlue: '#263238',
-        brightTeal: '#00ACC1',
-        lightTeal: '#4DD0E1',
-        mutedBlueGray: '#546E7A',
-        
-        // Futuristic Gradient & Glass
-        softDark: '#202020',
-        darkerGray: '#333333',
-        brightBlue: '#4B9EFF',
-        
-        // Warm and Inviting
-        softCream: '#FFFBF2',
-        richBrown: '#3E2723',
-        warmPeach: '#FBE9E7',
-        softOrange: '#FFD180',
-        mutedBrown: '#5D4037',
-        
         // High Contrast Modern
         deepBlack: '#121212',
         hotPink: '#FF4081',
@@ -98,4 +70,3 @@ export default {
     require('daisyui'),
   ],
 }
-

@@ -1,21 +1,22 @@
 import React from "react";
 import Search from "./Search";
 import Users from "./Users";
+
 function Left() {
   return (
     <>
-      <div className="border border-brightWhite w-[25%] bg-charcoal text-white">
-        <h1 className="font-robotoMono px-4 pt-1 text-2xl text- font-bold">
+      <div className="border box-border border-lavenderBlue  w-[25%] bg-cyberNavy text-lavenderBlue">
+        <h1 className="font-montserrat px-4 pt-5 text-3xl font-extrabold neon-font text-transparent bg-gradient-to-r from-neonMagenta to-neonCyan bg-clip-text">
           CHATS
         </h1>
-        <div>
-          <Search></Search>
-          <hr />
-          <Users></Users>
+        <div className="mt-1">
+          <Search />
+          <hr className="border-cyberNavy opacity-50 my-2" />
+          <Users />
         </div>
-        <hr></hr>
+        <hr className="border-cyberNavy opacity-50 my-2" />
         <div>
-          <Users></Users>
+          <Users />
         </div>
       </div>
     </>

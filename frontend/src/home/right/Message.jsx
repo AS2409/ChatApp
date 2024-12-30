@@ -19,15 +19,16 @@ function Message({ message }) {
 
   console.log("AuthUser: ", authUser);
   const isMyMessage = message.senderId === authUser.user._id;
-  const chatClass = isMyMessage ? "chat-end" : "chat-start";
-  const chatColor = isMyMessage ? "bg-neonCyan" : "";
+  const chatClass = isMyMessage ? "chat-end pr-2" : "chat-start pl-2";
+  const chatColor = isMyMessage ? "bg-neonCyan" : "bg-lavenderBlue";
 
   return (
-    <div className="pt-3 pl-3 p-2 font-sourceSans">
+    <div className="pt-3 pl-3 p-2">
       <div className={chatClass}>
-        <div className={`chat-bubble chat-bubble-accent ${chatColor}`}>
-          {message.message}{" "}
-          {/* Corrected property: use 'message' instead of 'text' */}
+        <div
+          className={`chat-bubble chat-bubble-accent ${chatColor} font-sansSarif text-md shadow-md`}
+        >
+          {message.message}
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ function useGetMessage() {
     setLoading(true);
     setError(null); // Reset error state before fetching new messages
     console.log("Selected conversation ID:", selectedConversation._id);
+    console.log("Selected conversation Name:", selectedConversation.name);
 
     try {
       const res = await axios.get(
