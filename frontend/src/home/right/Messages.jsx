@@ -10,23 +10,6 @@ function Messages() {
 
   // const messagesEndRef = useRef(null);
   const containerRef = useRef(null);
-  // const [isUserAtBottom, setIsUserAtBottom] = useState(true);
-
-  // Scroll to bottom logic when messages change, unless user has manually scrolled up
-  // const handleScroll = () => {
-  //   const container = containerRef.current;
-  //   if (!container) return;
-
-  //   const isAtBottom =
-  //     container.scrollHeight - container.scrollTop === container.clientHeight;
-  //   setIsUserAtBottom(isAtBottom);
-  // };
-
-  // useEffect(() => {
-  //   if (isUserAtBottom && messagesEndRef.current) {
-  //     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [messages, isUserAtBottom]);
 
   // Handle loading state
   if (loading) {
@@ -66,11 +49,13 @@ function Messages() {
   }
 
   return (
-    <div
-      className="messages-container"
-    >
+    <div className="messages-container">
       {messages.map((message, index) => (
-        <Message key={index} message={message} />
+        <Message
+          key={message._id} // Use unique identifier for key
+          message={message}
+          previousMessage={index > 0 ? messages[index - 1] : null} // Pass the previous message
+        />
       ))}
     </div>
   );

@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import { useAuth } from "./context/AuthProvider";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Loading from "./components/Loading";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster, ToastBar } from "react-hot-toast";
 
 function App() {
   const { authUser, setAuthUser } = useAuth();
@@ -15,20 +15,22 @@ function App() {
   return (
     <>
       <Routes>
-        { <Route
-          path="/"
-          element={
-            authUser ? (
-              <div className="flex h-screen overflow-hidden">
-                <Logout></Logout>
-                <Left></Left>
-                <Right></Right>
-              </div>
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
-        /> }
+        {
+          <Route
+            path="/"
+            element={
+              authUser ? (
+                <div className="flex h-screen overflow-hidden">
+                  <Logout></Logout>
+                  <Left></Left>
+                  <Right></Right>
+                </div>
+              ) : (
+                <Navigate to={"/login"} />
+              )
+            }
+          />
+        }
         <Route
           path="/login"
           element={authUser ? <Navigate to={"/"} /> : <Login />}
@@ -39,7 +41,21 @@ function App() {
         />
       </Routes>
       {/* <Loading></Loading> */}
-      <Toaster/>
+      <div className="bg-coralNeon">
+      <Toaster>
+        {(t) => (
+          <ToastBar
+            toast={t}
+            style={{
+              ...t.style,
+              animation: t.visible
+                ? "custom-enter 1s ease"
+                : "custom-exit 1s ease forwards",
+            }}
+          />
+        )}
+      </Toaster>
+      </div>
     </>
   );
 }
