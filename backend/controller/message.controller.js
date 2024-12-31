@@ -1,5 +1,7 @@
+import { io } from "../SocketIO/server.js";
 import Conversation from "../models/conversation.models.js";
 import Message from "../models/message.model.js";
+import { getRecieverSocketId } from "../SocketIO/server.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -11,6 +13,12 @@ export const sendMessage = async (req, res) => {
     if (!message || message.trim() === "") {
       return res.status(400).json({ message: "Message cannot be empty" });
     }
+
+    //added
+    if (message.length > 500) {
+      return res.status(400).json({ message: "Message is too long" });
+    }
+    
 
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId] },
@@ -34,6 +42,12 @@ export const sendMessage = async (req, res) => {
     await newMessage.save();
     conversation.messages.push(newMessage._id);
     await conversation.save();
+
+    //now we will send the message to the socket server directly
+    const receiversocketId = getRecieverSocketId(receiverId);
+    if (receiversocketId) {
+      io.to(receiversocketId).emit("newMessage", newMessage);
+    }
 
     // Return a success response
     res.status(201).json({ message: "Message sent successfully", newMessage });

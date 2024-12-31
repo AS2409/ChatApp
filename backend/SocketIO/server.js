@@ -12,6 +12,18 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
+
+
+
+//real time message function:
+export const getRecieverSocketId = (recieverId) =>{
+  return users[recieverId];
+}
+
+
+
+
 const users = {};
 //Socket is used on both size frontend and backend
 io.on("connection", (socket) => {
@@ -19,13 +31,13 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) {
     users[userId] = socket.id;
-    console.log("Hellooo", users);
+    console.log("Connected Users: ", users);
   }
   io.emit("get online", Object.keys(users)); //Will show whether the user is online or offline
   socket.on("disconnect", () => {
     console.log("Client disconnected", socket.id);
     delete users[userId];
-    io.emit("get online", Object.keys(users));
+    io.emit("getOnline", Object.keys(users));
   });
 });
 

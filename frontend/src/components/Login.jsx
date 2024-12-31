@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import toast from "react-hot-toast";
 
 export default function Login() {
   const { authUser, setAuthUser } = useAuth();
@@ -26,7 +27,7 @@ export default function Login() {
       .then((response) => {
         console.log(response.data);
         if (response.data) {
-          alert("Login successful!");
+          toast.success("Login successful!");
         }
 
         localStorage.setItem("messenger", JSON.stringify(response.data));
@@ -37,7 +38,7 @@ export default function Login() {
       })
       .catch((error) => {
         if (error.response) {
-          alert("Error: " + error.response.data.message);
+          toast.error("Error: " + error.response.data.message);
         }
       });
   };

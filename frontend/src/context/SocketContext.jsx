@@ -9,6 +9,7 @@ export const useSocketContext = () => {
   return useContext(socketContext);
 };
 //----
+
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -21,7 +22,7 @@ export const SocketProvider = ({ children }) => {
       });
       // User connection disconnection
       setSocket(socket);
-      socket.on("get online", (users) => {
+      socket.on("getOnline", (users) => {
         setOnlineUsers(users);
         console.log("Socket/client disconnected");
       });

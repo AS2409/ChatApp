@@ -17,10 +17,21 @@ function Message({ message }) {
     return null; // Handle case where auth user is missing
   }
 
-  console.log("AuthUser: ", authUser);
+  // console.log("AuthUser: ", authUser);
   const isMyMessage = message.senderId === authUser.user._id;
   const chatClass = isMyMessage ? "chat-end pr-2" : "chat-start pl-2";
   const chatColor = isMyMessage ? "bg-neonCyan" : "bg-lavenderBlue";
+  const createdAt = new Date(message.createdAt);
+  const formattedTime = createdAt.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute : '2-digit'
+  })
+
+
+
+
+
+
 
   return (
     <div className="pt-3 pl-3 p-2">
@@ -30,6 +41,7 @@ function Message({ message }) {
         >
           {message.message}
         </div>
+        <div className="text-xs">{formattedTime}</div>
       </div>
     </div>
   );
