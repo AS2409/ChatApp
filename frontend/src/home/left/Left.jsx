@@ -15,9 +15,6 @@ function Left() {
           <Users />
         </div>
         <hr className="border-cyberNavy opacity-50 my-2" />
-        <div>
-          <Users />
-        </div>
       </div>
     </>
   );

@@ -7,6 +7,31 @@
 }
 
 
+/* Rotated Text */
+.rotated-text {
+  transform: rotate(270deg); /* Rotate text 90 degrees */
+  white-space: nowrap; /* Keep the text in a single line */
+  background: linear-gradient(90deg,#FF00FF, #0080ff, #FF007F);
+  background-size: 300% 300%; /* Enable smooth gradient transition */
+  -webkit-background-clip: text; /* For WebKit browsers */
+  background-clip: text; /* For other modern browsers */
+  -webkit-text-fill-color: transparent; /* Make text transparent for WebKit */
+  animation: colorChange 9s linear infinite; /* Smooth gradient animation */
+}
+
+/* Gradient Color Animation */
+@keyframes colorChange {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+
+
+
 /* Main container for users list */
 .users-container {
   max-height: calc(84vh - 1vh); /* Limit height based on viewport height */
@@ -14,7 +39,7 @@
   padding: 0.5rem; /* Add some padding */
   scrollbar-width:thin; /* For modern browsers, thin scrollbar */
   scrollbar-color: #0D1117 ;  
-  border: 1px solid #9BA9FF; /* Optional: Add a border for visual separation */
+  border-top: 2px solid #9BA9FF; /* Optional: Add a border for visual separation */
   border-radius: 4px; /* Optional: Rounded corners */
 }
 
