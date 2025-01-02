@@ -1,42 +1,61 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { useAuth } from "./AuthProvider.jsx";
-import React from "react";
-import io from "socket.io-client";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { io } from "socket.io-client";
 
-const socketContext = createContext();
-//created a hook so that we can use it anywhere----
-export const useSocketContext = () => {
-  return useContext(socketContext);
-};
-//----
+// Create the SocketContext and provide the socket
+const SocketContext = createContext(null);
+
+// Custom hook to use the socket context
+export const useSocketContext = () => useContext(SocketContext);
+
+let socket;
 
 export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const { authUser } = useAuth(); // Assuming useAuth gives the authenticated user. here useAuth is a function returning an object not an array so to destructure it we use {authUser} rather [authUser]
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    if (authUser) {
-      const socket = io("http://localhost:5002/", {
-        query: { userId: authUser.user._id }, // Passing userId in the query
+    if (!socketRef.current) {
+      socketRef.current = io("ws://localhost:4001", {
+        query: {
+          userId: "676bbeb0533f8ab564ba12e5", // User ID
+        },
       });
-      // User connection disconnection
-      setSocket(socket);
-      socket.on("getOnline", (users) => {
-        setOnlineUsers(users);
-        console.log("Socket/client disconnected");
+
+      socket = socketRef.current;
+
+      socket.on("connect", () => {
+        console.log("WebSocket connected", socket.id); // Log successful connection
       });
-      return () => socket.close();
-    } else {
-      if (socket) {
-        socket.close();
-        setSocket(null);
-      }
+
+      socket.on("disconnect", () => {
+        console.log("WebSocket disconnected");
+      });
+
+      // Listen for updates to online users
+      socket.on("onlineUsers", (users) => {
+        setOnlineUsers(users); // Update the online users list
+      });
+
+      return () => {
+        if (socket) {
+          socket.close();
+          console.log("WebSocket closed");
+        }
+      };
     }
-  }, [authUser]); // Reconnect when authUser changes
+  }, []);
+
   return (
-    <socketContext.Provider value={{ socket, onlineUsers }}>
+    <SocketContext.Provider value={{ socket, onlineUsers }}>
       {children}
-    </socketContext.Provider>
+    </SocketContext.Provider>
   );
 };
+
+export default SocketProvider;

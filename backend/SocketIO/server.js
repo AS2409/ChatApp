@@ -13,16 +13,10 @@ const io = new Server(server, {
   },
 });
 
-
-
-
 //real time message function:
-export const getRecieverSocketId = (recieverId) =>{
+export const getRecieverSocketId = (recieverId) => {
   return users[recieverId];
-}
-
-
-
+};
 
 const users = {};
 //Socket is used on both size frontend and backend
@@ -33,7 +27,21 @@ io.on("connection", (socket) => {
     users[userId] = socket.id;
     console.log("Connected Users: ", users);
   }
-  io.emit("get online", Object.keys(users)); //Will show whether the user is online or offline
+  io.emit("getOnline", Object.keys(users)); //Will show whether the user is online or offline
+  // Handle incoming messages
+  socket.on("sendMessage", (messageData) => {
+    const { receiverId, message } = messageData;
+
+    // Get receiver's socket ID
+    const receiverSocketId = users[receiverId];
+
+    if (receiverSocketId) {
+      // Emit the message to the receiver
+      io.to(receiverSocketId).emit("newMessage", message);
+    } else {
+      console.log("User not connected or online");
+    }
+  });
   socket.on("disconnect", () => {
     console.log("Client disconnected", socket.id);
     delete users[userId];

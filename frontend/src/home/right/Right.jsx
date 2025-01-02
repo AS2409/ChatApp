@@ -4,6 +4,8 @@ import Messages from "./Messages";
 import Type from "./Type";
 import useConversation from "../../statemanage/useConversation.js";
 import { useAuth } from "../../context/AuthProvider.jsx";
+import { io } from "socket.io-client"; // Import Socket.io Client
+let socket;
 
 function Right() {
   const { selectedConversation, setSelectedConversation } = useConversation();

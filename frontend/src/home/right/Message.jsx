@@ -1,12 +1,11 @@
-import React from "react";
-import { IoSend } from "react-icons/io5";
-import useConversation from "../../statemanage/useConversation.js";
-
 function Message({ message, previousMessage }) {
-  console.log("Received message: ", message); // Check the message structure
+  // Extract newMessage if it's wrapped
+  const actualMessage = message?.newMessage || message;
 
-  if (!message || !message._id || !message.message) {
-    console.error("Invalid message object:", message);
+  console.log("Received message: ", actualMessage); // Check the message structure
+
+  if (!actualMessage || !actualMessage._id || !actualMessage.message) {
+    console.error("Invalid message object:", actualMessage);
     return null;
   }
 
@@ -16,11 +15,11 @@ function Message({ message, previousMessage }) {
     return null;
   }
 
-  const isMyMessage = message.senderId === authUser.user._id;
+  const isMyMessage = actualMessage.senderId === authUser.user._id;
   const chatClass = isMyMessage ? "chat-end pr-2" : "chat-start pl-2";
   const chatColor = isMyMessage ? "bg-neonCyan" : "bg-lavenderBlue";
 
-  const createdAt = new Date(message.createdAt);
+  const createdAt = new Date(actualMessage.createdAt);
   const formattedTime = createdAt.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -40,19 +39,17 @@ function Message({ message, previousMessage }) {
       {showDate && (
         <div className="text-center text-sm font-bold font-robotoMono my-2">
           {formattedDate}
-
         </div>
       )}
       <div className={chatClass}>
         <div
           className={`chat-bubble chat-bubble-accent ${chatColor} font-sansSarif text-md shadow-md`}
         >
-          {message.message}
+          {actualMessage.message}
         </div>
         <div className="text-xs font-robotoMono">{formattedTime}</div>
       </div>
     </div>
   );
 }
-
 export default Message;
