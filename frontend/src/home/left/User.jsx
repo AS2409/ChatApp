@@ -5,14 +5,15 @@ import { useSocketContext } from "../../context/SocketContext.jsx";
 function User({ user }) {
   const { selectedConversation, setSelectedConversation } = useConversation();
   const isSelected = selectedConversation?._id === user._id;
-  const { socket, onlineUsers} = useSocketContext();
+  const { socket, onlineUsers } = useSocketContext();
   const isOnline = onlineUsers.includes(user._id);
+
   return (
     <div
       className={`${
         isSelected
           ? " bg-cyberNight shadow-md shadow-neonCyan"
-          : " hover:bg-cyberNight " 
+          : " hover:bg-cyberNight "
       } transition duration-300 cursor-pointer rounded-lg mb-2`}
       onClick={() => setSelectedConversation(user)}
     >
@@ -32,7 +33,9 @@ function User({ user }) {
           <h1 className="font-bold text-lg text-neonMagenta font-raleway bg-clip-text">
             {user.name}
           </h1>
-          <span className="text-lavenderBlue font-oswald text-sm">{user.email}</span>
+          <span className="text-lavenderBlue font-oswald text-sm">
+            {user.email}
+          </span>
         </div>
       </div>
     </div>
