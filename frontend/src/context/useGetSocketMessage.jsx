@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSocketContext } from "./SocketContext.jsx";
 import useConversation from "../statemanage/useConversation.js";
+import sound from "../assets/msgSend.mp3"
 
 function useGetSocketMessage() {
   const { socket } = useSocketContext();
@@ -8,6 +9,10 @@ function useGetSocketMessage() {
 
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
+      //FOR SOUND PLAY FEATURE:
+      // const msgSound = new Audio(sound);
+      // msgSound.volume = 1.0;
+      // msgSound.play();
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 

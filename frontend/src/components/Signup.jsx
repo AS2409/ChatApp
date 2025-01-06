@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 function Signup() {
-  const { authUser, setAuthUser } = useAuth();
+  const { setAuthUser } = useAuth();
+  const [otpSent, setOtpSent] = useState(false); // Tracks if OTP was sent
+  const [otp, setOtp] = useState(""); // Tracks entered OTP
+  const [formData, setFormData] = useState({}); // Temporarily stores user info
+  const navigate = useNavigate(); // To navigate after successful signup
+
   const {
     register,
     handleSubmit,
@@ -16,177 +21,177 @@ function Signup() {
 
   const password = watch("password", "");
   const confirmPassword = watch("confirmPassword", "");
-  const validatePasswordMatch = (value) => {
-    return value === password || "*Password and Confirm Password don't match";
+  const validatePasswordMatch = (value) =>
+    value === password || "*Password and Confirm Password don't match";
+
+  const handleSendOtp = async (data) => {
+    console.log("Sending OTP with data:", data);  // This will show the form data
+    try {
+      const response = await axios.post("/api/user/send-otp", data);
+      console.log("OTP sent successfully", response.data);
+      setOtpSent(true); // Mark OTP as sent
+      setFormData(data); // Save the email in formData
+    } catch (error) {
+      console.error("Error sending OTP", error.response.data);
+      toast.error("Failed to send OTP");
+    }
   };
 
-  const onSubmit = async (data) => {
-    const userInfo = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    };
-    console.log(userInfo);
-
-    await axios
-      .post("/api/user/signup", userInfo)
-      .then((response) => {
-        console.log(response.data);
-        if (response.data) {
-          toast.success("Signup successfull!! You can Login now.");
-        }
-        //User's data is stored here:
-        localStorage.setItem("messenger", JSON.stringify(response.data));
-        setAuthUser(response.data); //globally data use now.
-      })
-      .catch((error) => {
-        if (error.response) {
-          toast.error("Error: " + error.response.data.message);
-        }
+  const handleVerifyOtp = async () => {
+    try {
+      const response = await axios.post("/api/user/verify-otp", {
+        email: formData.email, // Use saved email to verify OTP
+        otp,
       });
+      if (response.data.success) {
+        await handleSignup(); // Call signup logic after successful OTP verification
+      } else {
+        toast.error("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error verifying OTP. Please try again.");
+    }
+  };
+
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post("/api/user/signup", formData);
+      if (response.data) {
+        // Check if the account is already verified
+        if (response.data.isVerified) {
+          toast.error("This account is already verified. Try to Login!");
+        } else {
+          toast.success("Signup successful! Redirecting to home...");
+          localStorage.setItem("messenger", JSON.stringify(response.data));
+          setAuthUser(response.data); // Set user data globally
+          setTimeout(() => {
+            navigate("/"); // Delay navigation to make sure state is updated
+          }, 1000); // Adjust time if needed
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Signup failed. Please try again.");
+    }
   };
 
   return (
-    <>
-      <div className="flex h-screen items-center justify-center bg-cyberNavy">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="border border-neonMagenta px-6 py-5 rounded-md space-y-4 w-96 shadow-lg shadow-neonCyan"
-        >
-          <h1 className="text-neonMagenta  text-center font-bold font-montserrat text-3xl neon-font">
-            Cy<span className="text-neonCyan">Chat</span>
-          </h1>
-          <h2 className="text-center text-xl font-roboto text-cyberPink">
-            Create a New{" "}
-            <span className="text-cyberPink font-semibold">Account!</span>
-          </h2>
+    <div className="flex h-screen items-center justify-center bg-cyberNavy">
+      <form
+        onSubmit={otpSent ? handleVerifyOtp : handleSubmit(handleSendOtp)}
+        className="border border-neonMagenta px-6 py-5 rounded-md space-y-4 w-96 shadow-lg shadow-neonCyan"
+      >
+        <h1 className="text-neonMagenta text-center font-bold font-montserrat text-3xl neon-font">
+          Cy<span className="text-neonCyan">Chat</span>
+        </h1>
+        <h2 className="text-center text-xl font-roboto text-cyberPink">
+          {otpSent ? "Enter OTP" : "Create a New Account!"}
+        </h2>
 
-          {/* Username */}
-          <label className="input input-bordered flex items-center font-raleway gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 text-cyberNavy opacity-70"
-            >
-              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
-              placeholder="Username"
-              {...register("name", { required: true })}
-            />
-          </label>
-          {errors.name && (
-            <span className="text-red-600 text-sm font-semibold">
-              *This field is required
-            </span>
-          )}
-
-          {/* Email */}
-          <label className="input input-bordered flex items-center font-raleway gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 text-cyberNavy opacity-70"
-            >
-              <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-              <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
-              placeholder="Email"
-              {...register("email", { required: true })}
-            />
-          </label>
-          {errors.email && (
-            <span className="text-red-600 text-sm font-semibold">
-              *This field is required
-            </span>
-          )}
-
-          {/* Password */}
-          <label className="input input-bordered flex items-center font-raleway  gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 text-cyberNavy opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2.293a.5.5 0 0 1-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clipRule="evenodd"
+        {!otpSent && (
+          <>
+            {/* Username */}
+            <label className="input input-bordered flex items-center font-raleway gap-2">
+              <input
+                type="text"
+                className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+                placeholder="name"
+                {...register("name", { required: true })}
               />
-            </svg>
-            <input
-              type="password"
-              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
-              placeholder="Password"
-              {...register("password", { required: true })}
-            />
-          </label>
-          {errors.password && (
-            <span className="text-red-600 text-sm font-semibold">
-              *This field is required
-            </span>
-          )}
+            </label>
+            {errors.name && (
+              <span className="text-red-600 text-sm font-semibold">
+                *This field is required
+              </span>
+            )}
 
-          {/* Confirm Password */}
-          <label className="input input-bordered flex items-center font-raleway gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 text-cyberNavy opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2.293a.5.5 0 0 1-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clipRule="evenodd"
+            {/* Email */}
+            <label className="input input-bordered flex items-center font-raleway gap-2">
+              <input
+                type="email"
+                className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+                placeholder="email"
+                {...register("email", { required: true })}
+                disabled={otpSent} // Disable email input after OTP is sent
               />
-            </svg>
-            <input
-              type="password"
-              className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
-              placeholder="Confirm Password"
-              {...register("confirmPassword", {
-                required: true,
-                validate: validatePasswordMatch,
-              })}
-            />
-          </label>
-          {errors.confirmPassword && (
-            <span className="text-red-600 text-sm font-semibold">
-              {errors.confirmPassword.message}
-            </span>
-          )}
+            </label>
+            {errors.email && (
+              <span className="text-red-600 text-sm font-semibold">
+                *This field is required
+              </span>
+            )}
 
-          {/*Text and Button*/}
-          <div className="text-center space-y-2">
-            <input
-              type="submit"
-              value="Sign Up"
-              className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-neonCyan transition duration-300 ease-in-out hover:scale-105"
-            />
-            {errors.exampleRequired && <span>This field is required</span>}
-            <p className="text-cyberPink font-roboto pt-1">
-              Already have an account?{" "}
-              <Link
-                to={"/login"}
-                className="text-lavenderBlue underline cursor-pointer"
-              >
-                Login
-              </Link>
-            </p>
-          </div>
-        </form>
-      </div>
-    </>
+            {/* Password */}
+            <label className="input input-bordered flex items-center font-raleway gap-2">
+              <input
+                type="password"
+                className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+                placeholder="password"
+                {...register("password", { required: true })}
+              />
+            </label>
+            {errors.password && (
+              <span className="text-red-600 text-sm font-semibold">
+                *This field is required
+              </span>
+            )}
+
+            {/* Confirm Password */}
+            <label className="input input-bordered flex items-center font-raleway gap-2">
+              <input
+                type="password"
+                className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+                placeholder="Confirm Password"
+                {...register("confirmPassword", {
+                  required: true,
+                  validate: validatePasswordMatch,
+                })}
+              />
+            </label>
+            {errors.confirmPassword && (
+              <span className="text-red-600 text-sm font-semibold">
+                {errors.confirmPassword.message}
+              </span>
+            )}
+          </>
+        )}
+
+        {/* OTP Section */}
+        {otpSent && (
+          <>
+            <label className="input input-bordered flex items-center font-raleway gap-2">
+              <input
+                type="text"
+                className="grow bg-cyberNavy text-cyberNavy placeholder-lavenderBlue"
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            </label>
+          </>
+        )}
+
+        {/* Submit Button */}
+        <div className="text-center space-y-2">
+          <button
+            type="submit"
+            className="text-cyberNavy bg-neonCyan w-full font-montserrat rounded-md py-1 cursor-pointer hover:bg-neonMagenta font-bold text-lg scale-100 neon-font shadow-md hover:shadow-neonCyan transition duration-300 ease-in-out hover:scale-105"
+          >
+            {otpSent ? "Verify OTP" : "Signup"}
+          </button>
+          <p className="text-cyberPink font-roboto pt-1">
+            Already have an account?{" "}
+            <Link
+              to={"/login"}
+              className="text-lavenderBlue underline cursor-pointer"
+            >
+              Login
+            </Link>
+          </p>
+        </div>
+      </form>
+    </div>
   );
 }
 

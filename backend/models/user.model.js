@@ -1,16 +1,35 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
-const userSchema = mongoose.Schema(
-  {
-    name: { type: String, require: true },
-    email: { type: String, require: true, unique: true, lowercase: true },
-    password: { type: String, require: true },
-    confirmPassword: { type: String, require: true },
-  },
-  {
-    timestamps: true, //createdata and updatedata
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  otp: { type: String },
+  otpExpiresAt: { type: Date },
+}, { timestamps: true });
+
+
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    // Hash the password using bcrypt
+    this.password = await bcrypt.hash(this.password, 10);
   }
-);
+  next();
+});
 
-const User = mongoose.model("User", userSchema); //changing userSchema to model names as User.
+
+userSchema.pre("save", function (next) {
+  if (this.isVerified) {
+    this.otp = undefined;
+    this.otpExpiresAt = undefined;
+  }
+  next();
+});
+
+// Ensure that only one unverified user exists for an email
+userSchema.index({ email: 1, isVerified: 1 }, { unique: true });
+
+const User = mongoose.model("User", userSchema);
 export default User;
